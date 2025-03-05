@@ -24,5 +24,10 @@ namespace Semester2CA1Eloy
         {
             InitializeComponent();
         }
+
+      private void sliderCapacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            textBlock2.Text = string.Format("{0:F0}", sliderCapacity.Value);
+        }
     }
 }//hello
