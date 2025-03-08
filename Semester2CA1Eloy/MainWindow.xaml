@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Semester2CA1Eloy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="690" Width="1146">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="109*"/>
-            <RowDefinition Height="167*"/>
-            <RowDefinition Height="158*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -19,57 +19,87 @@
         </Grid.ColumnDefinitions>
 
         <!--First column-->
+        <TextBlock Text="Ward List" Grid.Row="0" Grid.Column="0" FontSize="20" Margin="5" Background="LightGreen"/>
 
-        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Background="Pink" Margin="10,10,10,10">
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="10,10,10,10">
 
+            <StackPanel Background="Pink" Height="auto" Width="auto">
+                <!--<ListBox x:Name="lbxWards" 
+                    SelectionChanged="lbxWards_SelectionChanged"
+                    Margin="5"/>-->
 
+            </StackPanel>
+        </ScrollViewer>
+        <!--Adding a Ward-->
 
+        <Expander  Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" IsExpanded="True" Header="Add new ward">
 
-        </StackPanel>
-        <TextBlock Margin="0,2,0,0" TextWrapping="Wrap" Text="Add new ward" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"/>
-        
-        <Expander  Grid.Row="2" Grid.Column="0" Margin="10,0,0,0" Grid.RowSpan="1" IsExpanded="True">
-            <Grid>
-                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="0,8,0,0" Text="Capacity"  />
+            <StackPanel Margin="0,0,0,0">
+                <TextBlock x:Name="textBlock0" TextWrapping="Wrap" Margin="0,8,0,0" Text="Name" Width="auto" HorizontalAlignment="Left" FontSize="20"  />
+                <TextBox x:Name="tbxWardName" TextChanged="tbxWardName_TextChanged" Height="auto" Width="150" TextWrapping="WrapWithOverflow" FontSize="20"/>
 
-                <TextBlock x:Name="textBlock2" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,8,70,0" Text="0"  />  
-            <Slider x:Name="sliderCapacity"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Width="179"                    
+                <TextBlock x:Name="textBlock1" TextWrapping="Wrap" Margin="0,8,0,0" Text="Capacity" Width="auto" Height="auto" HorizontalAlignment="Left" FontSize="20"  />
+                <Slider x:Name="sliderCapacity"
+                    Width="263"                    
                     TickPlacement="TopLeft"
                     SmallChange="1"
-                    ValueChanged="sliderCapacity_ValueChanged"/>
+                    ValueChanged="sliderCapacity_ValueChanged" Height="32" 
+                 />
+                <TextBlock x:Name="textBlock2" TextWrapping="Wrap"  Text="0" Width="auto" TextAlignment="Center" Height="auto" FontSize="20"  />
+                <Button x:Name="btnAddWard" Content="Add Ward" 
+        Click="btnAddWard_Click"
+        IsEnabled="False" Height="38" FontSize="12" Width="150" Margin="30"/>
 
-
-
-            </Grid>
+            </StackPanel>
         </Expander>
+        <!--second-->
+        <TextBlock Text="Patients" Grid.Row="0" Grid.Column="1" FontSize="20" Margin="5" Background="LightGreen"/>
 
-        <!--Second column-->
-        
-        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="Beige" Margin="10">
+        <ScrollViewer   VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="287" Margin="10,0,10,0" >
 
-        </StackPanel>
-        
-        
-        <TextBlock Margin="0,2,0,0" TextWrapping="Wrap" Text="Add new patient" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"/>
+            <StackPanel Background="Pink" Height="auto" Width="auto">
+                <ListBox>
 
-        <Expander  Grid.Row="2" Grid.Column="1" Margin="10,0,0,0" Grid.RowSpan="1">
+                </ListBox>
 
-            
+            </StackPanel>
+
+        </ScrollViewer>
+
+        <Expander  Grid.Row="2" Grid.Column="1" Header="New Patient" Margin="5,10,5,0" IsExpanded="True" >
+
+            <StackPanel>
+                <TextBlock Text="Name:" FontSize="20"/>
+                <TextBox x:Name="tbxPatientName" TextChanged="tbxPatientName_TextChanged"  Width="200" Height="auto"/>
+
+                <TextBlock Text="DOB:" FontSize="20" Width="50" HorizontalAlignment="Left"/>
+                <DatePicker x:Name="dpPatientDOB" Height="27" Width="120"/>
+
+                <TextBlock Text="Blood Type:" FontSize="20" Width="auto" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
+                    <RadioButton Content="A" GroupName="BloodType" IsChecked="False"/>
+                    <RadioButton Content="B" GroupName="BloodType"/>
+                    <RadioButton Content="AB" GroupName="BloodType"/>
+                    <RadioButton Content="O" GroupName="BloodType"/>
+                </StackPanel>
+                <Button x:Name="btnAddPatient" Content="Add Patient" 
+                        Click="btnAddPatient_Click"
+                        IsEnabled="False" Height="39" FontSize="12" Width="120"/>
+            </StackPanel>
         </Expander>
 
         <!--3rd column-->
+        <TextBlock Text="Info" Grid.Row="0" Grid.Column="2" FontSize="20" Margin="5" Background="LightGreen"/>
 
-        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Background="SaddleBrown" Margin="5">
-
+        <StackPanel Grid.Row="1"  Grid.Column="2" Background="SaddleBrown" Margin="5,5,5,5">
+            <TextBlock x:Name="tblkPatientName" FontSize="24" Margin="5"/>
+            <!--<Image x:Name="imgBloodType" Width="100" Height="100" Margin="5"/>-->
 
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="2" Background="Lavender" Margin="5,5,5,5">
-
-
+            <Button x:Name="btnLoad" Content="Load" Margin="0,30,0,0" Height="91" />
+            <Button x:Name="btnSave" Content="Save" Margin="0,30,0,0" Click="btnSave_Click" Height="109"/>
         </StackPanel>
 
     </Grid>
