@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Semester2CA1Eloy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="690" Width="1146">
+        Title="MainWindow" Height="690" Width="1146"
+        Loaded="Window_Loaded"
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
@@ -24,15 +26,15 @@
         <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="10,10,10,10">
 
             <StackPanel Background="Pink" Height="auto" Width="auto">
-                <!--<ListBox x:Name="lbxWards" 
-                    SelectionChanged="lbxWards_SelectionChanged"
-                    Margin="5"/>-->
+                <ListBox x:Name="lbxWards" SelectionChanged="lbxWards_SelectionChanged" Margin="5"/>
+
+                
 
             </StackPanel>
         </ScrollViewer>
         <!--Adding a Ward-->
 
-        <Expander  Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" IsExpanded="True" Header="Add new ward">
+        <Expander  Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" IsExpanded="False" Header="Add new ward">
 
             <StackPanel Margin="0,0,0,0">
                 <TextBlock x:Name="textBlock0" TextWrapping="Wrap" Margin="0,8,0,0" Text="Name" Width="auto" HorizontalAlignment="Left" FontSize="20"  />
@@ -52,21 +54,21 @@
 
             </StackPanel>
         </Expander>
-        <!--second-->
+        <!--Second column-->
         <TextBlock Text="Patients" Grid.Row="0" Grid.Column="1" FontSize="20" Margin="5" Background="LightGreen"/>
 
         <ScrollViewer   VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="287" Margin="10,0,10,0" >
 
             <StackPanel Background="Pink" Height="auto" Width="auto">
-                <ListBox>
-
+                <ListBox x:Name="lbxPatients" SelectionChanged="lbxPatients_SelectionChanged">
+                    
                 </ListBox>
 
             </StackPanel>
 
         </ScrollViewer>
-
-        <Expander  Grid.Row="2" Grid.Column="1" Header="New Patient" Margin="5,10,5,0" IsExpanded="True" >
+<!--Add a new patient-->
+        <Expander  Grid.Row="2" Grid.Column="1" Header="New Patient" Margin="5,10,5,0" IsExpanded="False" >
 
             <StackPanel>
                 <TextBlock Text="Name:" FontSize="20"/>
@@ -76,11 +78,17 @@
                 <DatePicker x:Name="dpPatientDOB" Height="27" Width="120"/>
 
                 <TextBlock Text="Blood Type:" FontSize="20" Width="auto" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
-                    <RadioButton Content="A" GroupName="BloodType" IsChecked="False"/>
-                    <RadioButton Content="B" GroupName="BloodType"/>
-                    <RadioButton Content="AB" GroupName="BloodType"/>
-                    <RadioButton Content="O" GroupName="BloodType"/>
+                <StackPanel  x:Name="bloodTypePanel1" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
+                    <RadioButton Content="A+" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="B+" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="AB+" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="O+" GroupName="BloodType" Checked="BloodType_Checked"/>
+                </StackPanel>
+                <StackPanel  x:Name="bloodTypePanel2" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
+                    <RadioButton Content="A-" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="B-" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="AB-" GroupName="BloodType" Checked="BloodType_Checked"/>
+                    <RadioButton Content="O-" GroupName="BloodType" Checked="BloodType_Checked"/>
                 </StackPanel>
                 <Button x:Name="btnAddPatient" Content="Add Patient" 
                         Click="btnAddPatient_Click"
