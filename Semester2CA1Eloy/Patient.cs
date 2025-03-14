@@ -11,19 +11,14 @@ namespace Semester2CA1Eloy
         public enum BloodType
         {
             // BloodType = Probability
-            ONeg = 1,
-            OPos = 2,
-            ANeg = 3,
-            APos = 4,
-            BNeg = 5,
-            BPos = 6,
-            ABNeg = 7,
-            ABPos = 8
+            O, A, AB, B
         };
 
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public BloodType Type { get; set; }
+
+
 
         // Constructor with name, birthdate, and blood type
         public Patient(string name, int year, int month, int day, BloodType bloodType)
@@ -37,11 +32,12 @@ namespace Semester2CA1Eloy
         {
         }
 
-        public Patient(string name, DateTime dateOfBirth, BloodType value)
+        // Constructor with name, full DateTime birthdate, and blood type
+        public Patient(string name, DateTime dateOfBirth, BloodType bloodType)
         {
             Name = name;
             DateOfBirth = dateOfBirth;
-            Value = value;
+            Type = bloodType;  
         }
 
         //Calculate to only show the age

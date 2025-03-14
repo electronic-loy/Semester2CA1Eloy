@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,74 +20,162 @@ using static Semester2CA1Eloy.Patient;
 
 namespace Semester2CA1Eloy
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    
     public partial class MainWindow : Window
     {
         private ObservableCollection<Ward> wards = new ObservableCollection<Ward>();
 
-        //private ObservableCollection<Patient> patients = new ObservableCollection<Patient>();
 
         public MainWindow()
         {
             InitializeComponent();
-
+            tbxWardName.TextChanged += tbxWardName_TextChanged;
+            sliderCapacity.ValueChanged += sliderCapacity_ValueChanged; // Add this line
+            UpdateAddWardButtonState(); 
         }
-
-
+        //The following is to make it able for the ADD WARD and ADD PATIENT buttons to work excellently
+        private void tbxWardName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateAddWardButtonState();
+        }
 
         private void sliderCapacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             textBlock2.Text = string.Format("{0:F0}", sliderCapacity.Value);
+            UpdateAddWardButtonState(); 
         }
+
+        private void UpdateAddWardButtonState()
+        {
+            btnAddWard.IsEnabled = !string.IsNullOrWhiteSpace(tbxWardName.Text) && sliderCapacity.Value > 0;
+        }
+
+       
 
         //save data
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            //string json = JsonConvert.SerializeObject(a, Formatting.Indented);
-
-            using (StreamWriter sw = new StreamWriter(@"c:\temp\Semester2CA1Eloy.json"))
+            try
             {
-                //sw.Write(json);
+                string filePath = @"c:\temp\wards.json";
 
+                // ✅ Convert and save the entire wards collection
+                string json = JsonConvert.SerializeObject(wards, Formatting.Indented);
+                File.WriteAllText(filePath, json);
+
+                MessageBox.Show("Wards and Patients saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        //load data
+        private void btnLoad_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string filePath = @"c:\temp\wards.json";
+
+                // Check json file
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show("File not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Read json file
+                string json = File.ReadAllText(filePath);
+                var loadedWards = JsonConvert.DeserializeObject<ObservableCollection<Ward>>(json);
+
+                if (loadedWards != null)
+                {
+                    wards.Clear();
+                    foreach (var ward in loadedWards)
+                    {
+                        wards.Add(ward);
+                    }
+                }
+
+                lbxWards.ItemsSource = wards;
+
+               
+                if (wards.Count > 0)
+                    lbxWards.SelectedIndex = 0;
+
+                MessageBox.Show("Wards and Patients loaded successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+       
+
+        //startup code
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Ward w1 = new Ward() { Name = "First time? Create a ward, save it, and load.", Capacity = 7 };
+            w1.Patients.Add(new Patient("Lore", 1995, 6, 15, BloodType.O));
+            w1.Patients.Add(new Patient("Ipsum", 2000, 10, 11, BloodType.AB));
+
+            Ward w2 = new Ward() { Name = "Second or + time? Load your json!", Capacity = 5 };
+            w2.Patients.Add(new Patient("Lore", 1979, 12, 3, BloodType.A));
+
+            // Use the ObservableCollection<Ward> field instead of creating a new List<Ward>
+            lbxWards.ItemsSource = wards;
+            wards.Add(w1);
+            wards.Add(w2);
+
+            // Select the first ward by default
+            if (wards.Count > 0)
+                lbxWards.SelectedIndex = 0;
+        }
+        Ward currentWard = null;
         private void tbxPatientName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ValidateInputs();
         }
 
-        private void tbxWardName_TextChanged(object sender, TextChangedEventArgs e)
-        {
 
-        }
 
         private void btnAddWard_Click(object sender, RoutedEventArgs e)
         {
-            string wardName = tbxWardName.Text;
+            string wardName = tbxWardName.Text.Trim();
             int capacity = (int)sliderCapacity.Value;
 
-            if (!string.IsNullOrWhiteSpace(wardName))
+            if (string.IsNullOrWhiteSpace(wardName) || capacity == 0)
+            {
+                MessageBox.Show("Please enter a ward name and a capacity greater than 0.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
             {
                 Ward newWard = new Ward(wardName, capacity);
                 wards.Add(newWard);
                 lbxWards.SelectedItem = newWard;
+
+                tbxWardName.Clear();
+                sliderCapacity.Value = 1;
+
+                UpdateAddWardButtonState(); // Update button state
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private BloodType ConvertRadioButtonToBloodType(string bloodTypeText)
+        private Patient.BloodType ConvertRadioButtonToBloodType(string bloodTypeText)
         {
             switch (bloodTypeText)
             {
-                case "O-": return BloodType.ONeg;
-                case "O+": return BloodType.OPos;
-                case "A-": return BloodType.ANeg;
-                case "A+": return BloodType.APos;
-                case "B-": return BloodType.BNeg;
-                case "B+": return BloodType.BPos;
-                case "AB-": return BloodType.ABNeg;
-                case "AB+": return BloodType.ABPos;
+                case "O": return BloodType.O;
+                case "A": return BloodType.A;
+                case "B": return BloodType.B;
+                case "AB": return BloodType.AB;
                 default:
                     throw new ArgumentException("Invalid blood type selection.");
             }
@@ -114,8 +203,8 @@ namespace Semester2CA1Eloy
                 DateTime dateOfBirth = dpPatientDOB.SelectedDate.Value;
 
                 // Get selected BloodType from RadioButtons
-                BloodType? selectedBloodType = null;
-                foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1, bloodTypePanel2 }) 
+                Patient.BloodType? selectedBloodType = null;
+                foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1 })
                 {
                     foreach (RadioButton rb in panel.Children)
                     {
@@ -133,17 +222,24 @@ namespace Semester2CA1Eloy
                     return;
                 }
 
+                // Check if the ward is at full capacity BEFORE adding the patient
+
+                if (currentWard.Patients.Count >= currentWard.Capacity)
+                {
+                    MessageBox.Show($"Ward '{currentWard.Name}' is at full capacity ({currentWard.Capacity} patients).", "Capacity Reached", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return; // Prevent adding more patients, i.e. no more patients if capacity is full
+                }
+
                 // Create new Patient object
                 Patient newPatient = new Patient(name, dateOfBirth, selectedBloodType.Value);
 
-                // Add the new patient directly to the ListBox
+                // Add the new patient directly to the currentWard
                 currentWard.Patients.Add(newPatient);
-
 
                 // Clear inputs
                 tbxPatientName.Clear();
                 dpPatientDOB.SelectedDate = null;
-                foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1, bloodTypePanel2 })
+                foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1 })
                 {
                     foreach (RadioButton rb in panel.Children)
                     {
@@ -174,7 +270,7 @@ namespace Semester2CA1Eloy
             bool isBloodTypeSelected = false;
 
             // Check if any RadioButton is selected
-            foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1, bloodTypePanel2 })
+            foreach (StackPanel panel in new List<StackPanel> { bloodTypePanel1 })
             {
                 foreach (RadioButton rb in panel.Children)
                 {
@@ -189,31 +285,6 @@ namespace Semester2CA1Eloy
             // Enable the button only if all conditions are met
             btnAddPatient.IsEnabled = isNameValid && isDOBValid && isBloodTypeSelected;
         }
-        //startup code
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            Ward w1 = new Ward() { Name = "Stark", Capacity = 7 };
-            w1.Patients.Add(new Patient("Jon", 1995, 6, 15, BloodType.ONeg));
-            w1.Patients.Add(new Patient("Arya", 2000, 10, 11, BloodType.ABNeg));
-
-            Ward w2 = new Ward() { Name = "Lannister", Capacity = 5 };
-            w2.Patients.Add(new Patient("Tyrion", 1979, 12, 3, BloodType.APos));
-
-            List<Ward> wards = new List<Ward>();
-
-            wards.Add(w1);
-            wards.Add(w2);
-
-            lbxWards.ItemsSource = wards;
-
-            // Select the first ward by default
-            if (wards.Count > 0)
-                lbxWards.SelectedIndex = 0;
-
-          
-
-        }
-        Ward currentWard = null; 
 
         private void lbxWards_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -224,7 +295,7 @@ namespace Semester2CA1Eloy
                 // Update the currentWard to the selected ward
                 currentWard = selectedWard;
 
-                // Update the patients ListBox to display patients of the currentWard
+                // Update the Patients ListBox to display Patients of the currentWard
                 lbxPatients.ItemsSource = currentWard.Patients;
 
                 // Optionally, select the first patient by default if there are any
@@ -238,14 +309,54 @@ namespace Semester2CA1Eloy
 
         private void lbxPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Patient selectedPatient = (Patient)lbxPatients.SelectedItem;
-            if (selectedPatient != null)
+            try
             {
-                tblkPatientName.Text = selectedPatient.Name;
-                lbxPatients.SelectedIndex = 0;
-            }
+                // Get the selected patient
+                var selectedPatient = lbxPatients.SelectedItem as Patient;
+                if (selectedPatient != null)
+                {
+                    // Set the patient name to the info area
+                    tblkPatientName.Text = selectedPatient.Name;
+                    // Get the blood type image file name dynamically based on selected patient's blood type
+                    string imagePath = GetBloodTypeImageFile(selectedPatient.Type);
 
+                    // Construct the full path to the image in the images folder
+                    string fullImagePath = System.IO.Path.Combine(Environment.CurrentDirectory, "images", imagePath);
+
+                    // Map the blood type to the corresponding image
+                    string bloodTypeImageFile = GetBloodTypeImageFile(selectedPatient.Type);
+
+                    // Set the image source
+                    patientImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(Environment.CurrentDirectory, "images", imagePath)));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading patient details: {ex.Message}");
+            }
         }
+
+        private string GetBloodTypeImageFile(Patient.BloodType bloodType)
+        {
+            // Map blood types to their respective image filenames
+            switch (bloodType)
+            {
+                case Patient.BloodType.A:
+                    return "a.png";
+                case Patient.BloodType.B:
+                    return "b.png";
+                case Patient.BloodType.AB:
+                    return "ab.png";
+                case Patient.BloodType.O:
+                    return "0.png";
+                default:
+                    return "default.png"; // In case something goes wrong
+            }
+        }
+
+
+
+
     }
 }
 

@@ -17,11 +17,13 @@ namespace Semester2CA1Eloy
         // Patients, using ObservableCollection to update like seen in previous Labs
         public ObservableCollection<Patient> Patients { get; set; }
 
+
         // Constructors
         public Ward()
         {
             Patients = new ObservableCollection<Patient>();
             WardCount++;
+
         }
         public Ward(string name, int capacity) : this()
         {

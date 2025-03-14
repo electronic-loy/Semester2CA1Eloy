@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Semester2CA1Eloy"
         mc:Ignorable="d"
         Title="MainWindow" Height="690" Width="1146"
-        Loaded="Window_Loaded"
+        Loaded="Window_Loaded" 
+        
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -21,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <!--First column-->
-        <TextBlock Text="Ward List" Grid.Row="0" Grid.Column="0" FontSize="20" Margin="5" Background="LightGreen"/>
+        <TextBlock Text="{Binding ElementName=lbxWards, Path=Items.Count, StringFormat='Ward List ({0})'}"   Grid.Row="0" Grid.Column="0" FontSize="20" Margin="5" Background="LightGreen"/>
 
         <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="10,10,10,10">
 
@@ -48,14 +49,12 @@
                     ValueChanged="sliderCapacity_ValueChanged" Height="32" 
                  />
                 <TextBlock x:Name="textBlock2" TextWrapping="Wrap"  Text="0" Width="auto" TextAlignment="Center" Height="auto" FontSize="20"  />
-                <Button x:Name="btnAddWard" Content="Add Ward" 
-        Click="btnAddWard_Click"
-        IsEnabled="False" Height="38" FontSize="12" Width="150" Margin="30"/>
+                <Button x:Name="btnAddWard" Content="Add Ward" Click="btnAddWard_Click" Height="38" FontSize="12" Width="150" Margin="30"/>
 
             </StackPanel>
         </Expander>
         <!--Second column-->
-        <TextBlock Text="Patients" Grid.Row="0" Grid.Column="1" FontSize="20" Margin="5" Background="LightGreen"/>
+        <TextBlock Text="{Binding ElementName=lbxPatients, Path=Items.Count, StringFormat='Patients ({0})'}"  Grid.Row="0" Grid.Column="1" FontSize="20" Margin="5" Background="LightGreen"/>
 
         <ScrollViewer   VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="287" Margin="10,0,10,0" >
 
@@ -78,17 +77,11 @@
                 <DatePicker x:Name="dpPatientDOB" Height="27" Width="120"/>
 
                 <TextBlock Text="Blood Type:" FontSize="20" Width="auto" HorizontalAlignment="Left"/>
-                <StackPanel  x:Name="bloodTypePanel1" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
-                    <RadioButton Content="A+" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="B+" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="AB+" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="O+" GroupName="BloodType" Checked="BloodType_Checked"/>
-                </StackPanel>
-                <StackPanel  x:Name="bloodTypePanel2" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="199" >
-                    <RadioButton Content="A-" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="B-" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="AB-" GroupName="BloodType" Checked="BloodType_Checked"/>
-                    <RadioButton Content="O-" GroupName="BloodType" Checked="BloodType_Checked"/>
+                <StackPanel  x:Name="bloodTypePanel1" Orientation="Horizontal" Height="30" HorizontalAlignment="Center" Width="207" >
+                    <RadioButton Content="A" GroupName="BloodType" Checked="BloodType_Checked" Width="53"/>
+                    <RadioButton Content="B" GroupName="BloodType" Checked="BloodType_Checked" Width="53"/>
+                    <RadioButton Content="AB" GroupName="BloodType" Checked="BloodType_Checked" Width="53"/>
+                    <RadioButton Content="O" GroupName="BloodType" Checked="BloodType_Checked" Width="53"/>
                 </StackPanel>
                 <Button x:Name="btnAddPatient" Content="Add Patient" 
                         Click="btnAddPatient_Click"
@@ -99,15 +92,15 @@
         <!--3rd column-->
         <TextBlock Text="Info" Grid.Row="0" Grid.Column="2" FontSize="20" Margin="5" Background="LightGreen"/>
 
-        <StackPanel Grid.Row="1"  Grid.Column="2" Background="SaddleBrown" Margin="5,5,5,5">
+        <StackPanel Grid.Row="1"  Grid.Column="2" Background="Pink" Margin="5,5,5,5">
             <TextBlock x:Name="tblkPatientName" FontSize="24" Margin="5"/>
-            <!--<Image x:Name="imgBloodType" Width="100" Height="100" Margin="5"/>-->
+            <Image Name="patientImage" Width="150" Height="150" Margin="10" />
 
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="2" Background="Lavender" Margin="5,5,5,5">
-            <Button x:Name="btnLoad" Content="Load" Margin="0,30,0,0" Height="91" />
-            <Button x:Name="btnSave" Content="Save" Margin="0,30,0,0" Click="btnSave_Click" Height="109"/>
+            <Button x:Name="btnLoad" Content="Load" Margin="0,30,0,0" Height="91" FontSize="36" Click="btnLoad_Click" />
+            <Button x:Name="btnSave" Content="Save" Margin="0,30,0,0" Click="btnSave_Click" Height="109" FontSize="36"/>
         </StackPanel>
 
     </Grid>
