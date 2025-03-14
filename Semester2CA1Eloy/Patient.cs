@@ -10,7 +10,6 @@ namespace Semester2CA1Eloy
     {
         public enum BloodType
         {
-            // BloodType = Probability
             O, A, AB, B
         };
 
