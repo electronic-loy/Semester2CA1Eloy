@@ -25,12 +25,12 @@ namespace Semester2CA1Eloy
     {
         private ObservableCollection<Ward> wards = new ObservableCollection<Ward>();
 
-
+        //MainWindow will allow for the slider to return to like the start after adding new wards
         public MainWindow()
         {
             InitializeComponent();
             tbxWardName.TextChanged += tbxWardName_TextChanged;
-            sliderCapacity.ValueChanged += sliderCapacity_ValueChanged; // Add this line
+            sliderCapacity.ValueChanged += sliderCapacity_ValueChanged; 
             UpdateAddWardButtonState(); 
         }
         //The following is to make it able for the ADD WARD and ADD PATIENT buttons to work excellently
@@ -58,11 +58,9 @@ namespace Semester2CA1Eloy
             try
             {
                 string filePath = @"c:\temp\wards.json";
-
-                // ✅ Convert and save the entire wards collection
                 string json = JsonConvert.SerializeObject(wards, Formatting.Indented);
                 File.WriteAllText(filePath, json);
-
+                //Message to acknowledge that it was saved
                 MessageBox.Show("Wards and Patients saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -117,6 +115,8 @@ namespace Semester2CA1Eloy
         //startup code
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Basic instructions set in as wards
+
             Ward w1 = new Ward() { Name = "First time? Create a ward, save it, and load.", Capacity = 7 };
             w1.Patients.Add(new Patient("Lore", 1995, 6, 15, BloodType.O));
             w1.Patients.Add(new Patient("Ipsum", 2000, 10, 11, BloodType.AB));
@@ -139,7 +139,7 @@ namespace Semester2CA1Eloy
             ValidateInputs();
         }
 
-
+        //AddWard Button
 
         private void btnAddWard_Click(object sender, RoutedEventArgs e)
         {
@@ -168,6 +168,8 @@ namespace Semester2CA1Eloy
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        
+        //Info to convert the bloodtype before clicking the AddPatient button
         private Patient.BloodType ConvertRadioButtonToBloodType(string bloodTypeText)
         {
             switch (bloodTypeText)
@@ -181,6 +183,7 @@ namespace Semester2CA1Eloy
             }
         }
 
+        //AddPatient Button
 
         private void btnAddPatient_Click(object sender, RoutedEventArgs e)
         {
@@ -255,6 +258,8 @@ namespace Semester2CA1Eloy
             }
         }
 
+        //Validating if a Patient can be added or not
+
         private void dpPatientDOB_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             ValidateInputs();
@@ -285,6 +290,7 @@ namespace Semester2CA1Eloy
             // Enable the button only if all conditions are met
             btnAddPatient.IsEnabled = isNameValid && isDOBValid && isBloodTypeSelected;
         }
+        //Refreshing the UI with the selected ward
 
         private void lbxWards_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -306,6 +312,7 @@ namespace Semester2CA1Eloy
             }
         }
 
+        //Refreshing the UI again, now with Patient
 
         private void lbxPatients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -336,6 +343,8 @@ namespace Semester2CA1Eloy
             }
         }
 
+        //Show the image that corresponds with the bloodtype
+
         private string GetBloodTypeImageFile(Patient.BloodType bloodType)
         {
             // Map blood types to their respective image filenames
@@ -354,7 +363,7 @@ namespace Semester2CA1Eloy
             }
         }
 
-
+        //Done!
 
 
     }

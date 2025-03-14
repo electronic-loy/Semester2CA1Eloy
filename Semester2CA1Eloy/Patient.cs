@@ -47,12 +47,11 @@ namespace Semester2CA1Eloy
             {
                 DateTime today = DateTime.Today;
                 int age = today.Year - DateOfBirth.Year;
-                if (DateOfBirth > today.AddYears(-age)) age--; // Adjust if birthday hasn't occurred yet
+                if (DateOfBirth > today.AddYears(-age)) age--; // Adjusts if birthday hasn't occurred yet (someone from 2023 can be 2 or 1 years old)
                 return age;
             }
         }
 
-        public BloodType Value { get; }
 
         // Override ToString to display age instead of full birthdate
         public override string ToString()
